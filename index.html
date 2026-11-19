@@ -10,10 +10,10 @@
 <style>
 /* Plan
    Colour: brand mono. paper #FFFFFF, ink #000000, wash #F4F4F4, grey #6E6E6E, rule #E3E3E3. No accent colour.
-   Type: Pretendard only. 900 for the headline and figures, 400/500 for reading.
-   Layout: wordmark bar; white hero with the week's headline, the wing mark huge and faint behind it on the right;
-           card strip (lead card solid black, the rest white); digest as three ruled columns; A4 sheet view.
-   Principle: the wing mark is the only ornament. Everything else is type, space and one hairline. */
+   Type: Pretendard only. 900 for headline and figures, 400/500 for reading.
+   Layout: wordmark bar; hero = headline + three-line summary, faint wing mark behind;
+           fixed category rail (7 game-industry categories, M&A last) driving a card strip; A4 sheet view.
+   Principle: one card per category, one figure per card, one line on what it means for us. */
 :root{
   --paper:#FFFFFF; --wash:#F4F4F4; --ink:#000000; --grey:#6E6E6E; --rule:#E3E3E3; --card:#FFFFFF; --mark:rgba(0,0,0,.035);
   --font:"Pretendard Variable","Pretendard",-apple-system,BlinkMacSystemFont,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
@@ -22,9 +22,9 @@
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){ --paper:#000000; --wash:#121212; --ink:#FFFFFF; --grey:#A3A3A3; --rule:#2A2A2A; --card:#121212; --mark:rgba(255,255,255,.06); color-scheme:dark; }
+  :root:not([data-theme="light"]){ --paper:#000000; --wash:#141414; --ink:#FFFFFF; --grey:#A3A3A3; --rule:#2A2A2A; --card:#111111; --mark:rgba(255,255,255,.06); color-scheme:dark; }
 }
-:root[data-theme="dark"]{ --paper:#000000; --wash:#121212; --ink:#FFFFFF; --grey:#A3A3A3; --rule:#2A2A2A; --card:#121212; --mark:rgba(255,255,255,.06); color-scheme:dark; }
+:root[data-theme="dark"]{ --paper:#000000; --wash:#141414; --ink:#FFFFFF; --grey:#A3A3A3; --rule:#2A2A2A; --card:#111111; --mark:rgba(255,255,255,.06); color-scheme:dark; }
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--paper);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.6;letter-spacing:-.012em;-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-x:hidden}
@@ -34,7 +34,6 @@ button,select{font:inherit;color:inherit;letter-spacing:inherit}
 .wrap{max-width:1160px;margin:0 auto;padding:0 28px}
 .mask{display:inline-block;background:var(--ink);-webkit-mask:var(--word) center/contain no-repeat;mask:var(--word) center/contain no-repeat}
 
-/* bar */
 .bar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 0;border-bottom:1px solid var(--rule)}
 .brand{display:flex;align-items:center;gap:14px;font-size:14px;font-weight:600;color:var(--grey)}
 .brand .mask{width:150px;height:20px}
@@ -43,82 +42,73 @@ button,select{font:inherit;color:inherit;letter-spacing:inherit}
 .tabs button{border:0;background:none;padding:6px 0;font-weight:700;font-size:15px;color:var(--grey);cursor:pointer;border-bottom:2px solid transparent}
 .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
 
-/* hero */
-.hero{position:relative;padding:72px 0 56px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px 48px;align-items:end;isolation:isolate}
-.hero::before{content:"";position:absolute;z-index:-1;right:-140px;top:10px;width:620px;height:480px;background:var(--mark);-webkit-mask:var(--wing) center/contain no-repeat;mask:var(--wing) center/contain no-repeat;pointer-events:none}
-.week{font-size:15px;font-weight:700;margin-bottom:18px;display:flex;gap:14px;flex-wrap:wrap}
+.hero{position:relative;padding:64px 0 48px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px 48px;align-items:end;isolation:isolate}
+.hero::before{content:"";position:absolute;z-index:-1;right:-140px;top:0;width:620px;height:480px;background:var(--mark);-webkit-mask:var(--wing) center/contain no-repeat;mask:var(--wing) center/contain no-repeat;pointer-events:none}
+.week{font-size:15px;font-weight:700;margin-bottom:16px;display:flex;gap:14px;flex-wrap:wrap}
 .week span+span{font-weight:500;color:var(--grey)}
-.hero h1{font-size:clamp(34px,5.4vw,62px);font-weight:900;line-height:1.14;letter-spacing:-.055em;max-width:15em}
-.hero p{margin:18px 0 0;font-size:18px;color:var(--grey);max-width:38em}
+.hero h1{font-size:clamp(32px,5vw,56px);font-weight:900;line-height:1.15;letter-spacing:-.055em;max-width:15em}
+.top3{margin:26px 0 0;padding:0;list-style:none;display:grid;gap:10px;max-width:46em}
+.top3 li{display:grid;grid-template-columns:22px 1fr;font-size:17px;line-height:1.55}
+.top3 li::before{content:"";width:8px;height:8px;background:var(--ink);margin-top:.6em}
 .issue{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--grey)}
 .issue select{background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:10px 12px;font-weight:600;font-size:14px}
 
-/* cards */
-.strip-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.strip-head h2{font-size:15px;font-weight:700}
-.ctrl{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;color:var(--grey);font-variant-numeric:tabular-nums}
-.ctrl button{width:40px;height:40px;border-radius:50%;border:1px solid var(--rule);background:var(--paper);cursor:pointer;font-size:18px;line-height:1}
-.ctrl button:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.track{display:grid;grid-auto-flow:column;grid-auto-columns:min(300px,78vw);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 0 18px;scrollbar-width:none}
+/* category rail */
+.rail{display:flex;gap:6px;flex-wrap:wrap;padding:18px 0 16px;border-top:1px solid var(--ink)}
+.rail button{border:1px solid var(--rule);background:var(--paper);border-radius:999px;padding:7px 14px;font-size:14px;font-weight:600;color:var(--grey);cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.rail button:hover:not([disabled]){border-color:var(--ink);color:var(--ink)}
+.rail button.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.rail button[disabled]{opacity:.35;cursor:default}
+.rail .ctrl{margin-left:auto;display:flex;gap:6px}
+.rail .ctrl button{width:36px;padding:7px 0;color:var(--ink);font-size:16px;line-height:1.2}
+
+.track{display:grid;grid-auto-flow:column;grid-auto-columns:min(290px,78vw);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 0 18px;scrollbar-width:none}
 .track::-webkit-scrollbar{display:none}
-.card{scroll-snap-align:start;aspect-ratio:4/5;border:1px solid var(--rule);border-radius:14px;background:var(--card);color:var(--ink);text-align:left;cursor:pointer;padding:22px;display:flex;flex-direction:column;position:relative;overflow:hidden;isolation:isolate;transition:border-color .15s}
+.card{scroll-snap-align:start;min-height:340px;border:1px solid var(--rule);border-radius:14px;background:var(--card);color:var(--ink);text-align:left;cursor:pointer;padding:22px;display:flex;flex-direction:column;position:relative;overflow:hidden;isolation:isolate;transition:border-color .15s}
 .card:hover{border-color:var(--ink)}
 .card.lead{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .card.lead::after{content:"";position:absolute;z-index:-1;right:-70px;bottom:-60px;width:300px;height:232px;background:var(--paper);opacity:.08;-webkit-mask:var(--wing) center/contain no-repeat;mask:var(--wing) center/contain no-repeat}
-.card .tag{font-size:13px;font-weight:600;color:var(--grey)}
-.card.lead .tag{color:inherit;opacity:.7}
-.card .fig{font-size:48px;font-weight:900;letter-spacing:-.06em;line-height:1;margin:22px 0 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.card .fig.m{font-size:40px}.card .fig.l{font-size:33px}
+.card .cat{font-size:13px;font-weight:700}
+.card .fig{font-size:44px;font-weight:900;letter-spacing:-.06em;line-height:1;margin:26px 0 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.card .fig.m{font-size:38px}.card .fig.l{font-size:32px}
 .card .figlab{font-size:13px;color:var(--grey);line-height:1.4}
-.card.lead .figlab{color:inherit;opacity:.7}
-.card h3{margin-top:auto;font-size:20px;font-weight:800;line-height:1.35;letter-spacing:-.04em}
-.card p{margin:8px 0 0;font-size:14px;line-height:1.5;color:var(--grey);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.card.lead p{color:inherit;opacity:.75}
+.card.lead .figlab,.card.lead p{color:inherit;opacity:.72}
+.card h3{margin-top:auto;padding-top:24px;font-size:20px;font-weight:800;line-height:1.35;letter-spacing:-.04em}
+.card p{margin:6px 0 0;font-size:14px;line-height:1.5;color:var(--grey)}
 .card .open{position:absolute;top:18px;right:18px;font-size:22px;font-weight:300;line-height:1;transition:transform .2s ease}
 .card:hover .open{transform:rotate(90deg)}
-.meter{height:2px;background:var(--rule);max-width:180px;margin:6px auto 0;overflow:hidden}
-.meter span{display:block;height:100%;background:var(--ink);transition:width .25s ease}
 @keyframes deal{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .track.dealt .card{animation:deal .45s cubic-bezier(.2,.7,.2,1) both}
 @media (prefers-reduced-motion: reduce){ .track.dealt .card{animation:none} *{transition:none !important} }
-
-/* digest */
-.digest{margin:56px 0 0;padding-top:28px;border-top:1px solid var(--ink);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 0}
-.digest > div{padding:0 28px}
-.digest > div:first-child{padding-left:0}
-.digest > div + div{border-left:1px solid var(--rule)}
-.digest h4{font-size:15px;font-weight:800;margin-bottom:12px}
-.digest ul{margin:0;padding:0;list-style:none;display:grid;gap:9px;font-size:15px}
-.digest .when li{display:grid;grid-template-columns:50px 1fr;gap:10px}
-.digest .when time{font-weight:800;font-variant-numeric:tabular-nums}
-.digest .watch li,.digest .so li{padding-left:14px;position:relative}
-.digest .watch li::before,.digest .so li::before{content:"";position:absolute;left:0;top:.7em;width:6px;height:1.5px;background:var(--ink)}
-@media (max-width:860px){ .hero{grid-template-columns:1fr} .digest{grid-template-columns:1fr} .digest > div{padding:0} .digest > div + div{border-left:0;border-top:1px solid var(--rule);padding-top:22px} }
+.hint{font-size:13px;color:var(--grey);margin:2px 0 0}
 .view[hidden]{display:none}
 #view-cards{padding-bottom:72px}
+@media (max-width:860px){ .hero{grid-template-columns:1fr} .rail .ctrl{display:none} }
 
 /* detail */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;justify-content:center;align-items:flex-start;padding:5vh 16px;overflow-y:auto;z-index:40}
 .overlay[hidden]{display:none}
-.sheet{width:100%;max-width:700px;background:var(--paper);color:var(--ink);border-radius:16px;overflow:hidden;position:relative;animation:rise .25s cubic-bezier(.2,.7,.2,1)}
+.sheet{width:100%;max-width:680px;background:var(--paper);color:var(--ink);border-radius:16px;overflow:hidden;position:relative;animation:rise .25s cubic-bezier(.2,.7,.2,1)}
 @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){ .sheet{animation:none} }
 .sheet-hero{background:#000;color:#fff;padding:30px clamp(22px,4vw,40px) 28px;position:relative;isolation:isolate;overflow:hidden}
 .sheet-hero::after{content:"";position:absolute;z-index:-1;right:-60px;bottom:-70px;width:340px;height:263px;background:#fff;opacity:.08;-webkit-mask:var(--wing) center/contain no-repeat;mask:var(--wing) center/contain no-repeat}
-.sheet-hero .tag{font-size:13px;font-weight:600;opacity:.7}
-.sheet-hero .fig{font-size:clamp(40px,6vw,54px);font-weight:900;letter-spacing:-.06em;line-height:1;margin:16px 0 6px;font-variant-numeric:tabular-nums}
+.sheet-hero .cat{font-size:13px;font-weight:700;opacity:.75}
+.sheet-hero .fig{font-size:clamp(40px,6vw,52px);font-weight:900;letter-spacing:-.06em;line-height:1;margin:16px 0 6px;font-variant-numeric:tabular-nums}
 .sheet-hero .figlab{font-size:13px;opacity:.7}
 .sheet-hero h2{margin-top:20px;font-size:clamp(22px,3.2vw,28px);font-weight:800;line-height:1.3;letter-spacing:-.045em;padding-right:40px}
 .close{position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:none;color:#fff;cursor:pointer;font-size:20px;line-height:1;z-index:2}
-.sheet-body{padding:28px clamp(22px,4vw,40px) 6px}
-.lede{font-size:17px;font-weight:500;line-height:1.65;margin:0 0 22px;max-width:62ch}
-.pts{margin:0 0 24px;padding:0;list-style:none;display:grid;gap:11px;max-width:62ch}
+.sheet-body{padding:26px clamp(22px,4vw,40px) 6px}
+.lede{font-size:17px;font-weight:500;line-height:1.65;margin:0 0 20px;max-width:60ch}
+.so{margin:0 0 22px;padding:14px 16px;background:var(--wash);border-radius:10px;font-size:15px;font-weight:600;line-height:1.55}
+.so b{display:block;font-size:12.5px;color:var(--grey);font-weight:700;margin-bottom:2px}
+.pts{margin:0 0 22px;padding:0;list-style:none;display:grid;gap:10px;max-width:60ch}
 .pts li{padding-left:16px;position:relative}
 .pts li::before{content:"";position:absolute;left:0;top:.75em;width:7px;height:1.5px;background:var(--ink)}
-.tbl{overflow-x:auto;margin:0 0 24px}
+.tbl{overflow-x:auto;margin:0 0 22px}
 .tbl table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
 .tbl th{text-align:left;font-size:12.5px;font-weight:700;color:var(--grey);padding:0 12px 8px 0;border-bottom:1.5px solid var(--ink)}
-.tbl td{padding:10px 12px 10px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.tbl td{padding:9px 12px 9px 0;border-bottom:1px solid var(--rule);vertical-align:top}
 .tbl td:first-child{font-weight:700}
 .src{border-top:1px solid var(--rule);padding:14px 0 6px;font-size:13px;color:var(--grey)}
 .src ul{margin:6px 0 0;padding:0;list-style:none;display:grid;gap:4px}
@@ -129,37 +119,44 @@ button,select{font:inherit;color:inherit;letter-spacing:inherit}
 .pager button[disabled]{opacity:.3;cursor:default}
 
 /* A4 sheet: fixed light palette */
-#view-paper{padding:8px 0 72px}
+#view-paper{padding:0 0 72px}
 .paper-note{color:var(--grey);font-size:14px;margin:0 0 16px;text-align:center}
 .paper-wrap{display:flex;justify-content:center;overflow-x:auto;padding:4px 0 8px}
-.a4{width:794px;min-width:794px;min-height:1123px;background:#fff;color:#000;padding:40px 50px 34px;font-size:12.6px;line-height:1.66;letter-spacing:-.015em;color-scheme:light;border:1px solid #E3E3E3;position:relative;isolation:isolate;overflow:hidden}
+.a4{width:794px;min-width:794px;height:1123px;background:#fff;color:#000;padding:40px 48px 30px;font-size:12.4px;line-height:1.62;letter-spacing:-.015em;color-scheme:light;border:1px solid #E3E3E3;position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column}
 .a4::after{content:"";position:absolute;z-index:-1;right:-90px;bottom:-60px;width:420px;height:325px;background:#000;opacity:.035;-webkit-mask:var(--wing) center/contain no-repeat;mask:var(--wing) center/contain no-repeat}
-.np-mast{display:grid;grid-template-columns:1fr auto;align-items:end;gap:16px;padding-bottom:12px;border-bottom:4px solid #000}
-.np-mast .t{font-size:40px;font-weight:900;letter-spacing:-.065em;line-height:1}
+.np-mast{display:grid;grid-template-columns:1fr auto;align-items:end;gap:16px;padding-bottom:10px;border-bottom:4px solid #000}
 .np-mast .by{display:block;width:110px;height:14px;background:#000;-webkit-mask:var(--word) left center/contain no-repeat;mask:var(--word) left center/contain no-repeat;margin-bottom:8px}
+.np-mast .t{font-size:38px;font-weight:900;letter-spacing:-.065em;line-height:1}
 .np-mast .m{text-align:right;font-size:11.5px;color:#6E6E6E;line-height:1.5;font-variant-numeric:tabular-nums}
 .np-mast .m strong{display:block;color:#000;font-size:13px}
-.np-head{padding:18px 0 14px;border-bottom:1px solid #000}
-.np-head .kicker{display:inline-block;background:#000;color:#fff;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:2px}
-.np-head h2{font-size:31px;font-weight:900;line-height:1.24;letter-spacing:-.06em;margin:8px 0 6px}
-.np-head .deck{margin:0;font-size:14px;font-weight:500;color:#4A4A4A}
-.np-body{display:grid;grid-template-columns:2fr 1fr;gap:24px;padding-top:16px}
-.np-main{column-count:2;column-gap:22px;column-rule:1px solid #E3E3E3}
-.np-main h3{font-size:15px;font-weight:800;letter-spacing:-.045em;line-height:1.35;margin:0 0 5px;break-after:avoid}
-.np-main p{margin:0 0 10px;text-align:justify}
-.np-side{display:flex;flex-direction:column;gap:11px}
+.np-head{padding:16px 0 14px;border-bottom:1px solid #000;display:grid;grid-template-columns:1.15fr 1fr;gap:24px;align-items:start}
+.np-head h2{font-size:27px;font-weight:900;line-height:1.25;letter-spacing:-.06em}
+.np-head ul{margin:0;padding:12px 14px;list-style:none;background:#F4F4F4;border-radius:4px;display:grid;gap:5px;font-size:12.4px;font-weight:500}
+.np-head li{display:grid;grid-template-columns:12px 1fr}
+.np-head li::before{content:"";width:5px;height:5px;background:#000;margin-top:.6em}
+.np-head .lbl{font-size:11px;font-weight:800;margin-bottom:2px}
+.np-body{display:grid;grid-template-columns:1fr 200px;gap:22px;padding-top:14px;flex:1}
+.np-cats{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;align-content:start}
+.np-cats article{border-top:1.5px solid #000;padding-top:6px}
+.np-cats .c{font-size:10.5px;font-weight:800;color:#6E6E6E}
+.np-cats h3{font-size:14px;font-weight:800;letter-spacing:-.045em;line-height:1.35;margin:1px 0 3px}
+.np-cats p{margin:0}
+.np-cats .s{margin-top:4px;font-weight:500}
+.np-cats .s b{font-weight:800}
+.np-side{display:flex;flex-direction:column;gap:14px}
 .np-side h4{font-size:12px;font-weight:800;margin:0 0 6px;padding-bottom:4px;border-bottom:1.5px solid #000}
-.nums{display:grid;gap:6px}
+.nums{display:grid;gap:7px}
 .nums b{display:block;font-size:19px;font-weight:900;letter-spacing:-.05em;line-height:1.15;font-variant-numeric:tabular-nums}
-.nums span{font-size:11px;color:#6E6E6E}
-.np-side ul{margin:0;padding-left:14px;font-size:12px;line-height:1.55}
-.np-side li{margin:1px 0}
-.np-side .note{margin:0;padding:10px 12px;background:#F4F4F4;border-radius:4px}
-.np-foot{margin-top:16px;border-top:1px solid #000;padding-top:8px;font-size:10.5px;color:#6E6E6E}
+.nums span{font-size:10.5px;color:#6E6E6E}
+.np-side ul{margin:0;padding:0;list-style:none;font-size:12px;display:grid;gap:3px}
+.np-side li{display:grid;grid-template-columns:38px 1fr}
+.np-side li b{font-variant-numeric:tabular-nums}
+.np-side .note{margin:0;padding:10px 12px;background:#F4F4F4;border-radius:4px;font-weight:600}
+.np-foot{margin-top:10px;border-top:1px solid #000;padding-top:7px;font-size:10.5px;color:#6E6E6E}
 
 footer{color:var(--grey);font-size:13px;padding:22px 0 40px;border-top:1px solid var(--rule)}
-@media (max-width:640px){ .wrap{padding:0 18px} .brand span{display:none} .hero{padding:48px 0 40px} .hero::before{width:420px;height:325px;right:-160px} }
-@media print{ .bar,.hero,footer,#view-cards,.paper-note{display:none !important} .a4{border:0;width:auto;min-width:0} }
+@media (max-width:640px){ .wrap{padding:0 18px} .brand span{display:none} .hero{padding:44px 0 36px} .hero::before{width:420px;height:325px;right:-160px} .top3 li{font-size:16px} }
+@media print{ .bar,.hero,footer,#view-cards,.paper-note{display:none !important} .a4{border:0} }
 </style>
 </head>
 <body>
@@ -175,7 +172,7 @@ footer{color:var(--grey);font-size:13px;padding:22px 0 40px;border-top:1px solid
     <div>
       <div class="week"><span id="h-week"></span><span id="h-range"></span></div>
       <h1 id="h-title"></h1>
-      <p id="h-deck"></p>
+      <ul class="top3" id="h-top3" aria-label="한눈에 보는 이번 주"></ul>
     </div>
     <div class="issue">
       <label for="issue-select">지난 호 보기</label>
@@ -186,19 +183,10 @@ footer{color:var(--grey);font-size:13px;padding:22px 0 40px;border-top:1px solid
 
 <main class="wrap">
   <section id="view-cards" class="view" role="tabpanel" aria-labelledby="tab-cards">
-    <div class="strip-head">
-      <h2 id="strip-title">이번 주 카드뉴스</h2>
-      <div class="ctrl">
-        <button id="prev" aria-label="이전 카드">‹</button>
-        <span id="count">1 / 1</span>
-        <button id="next" aria-label="다음 카드">›</button>
-      </div>
-    </div>
+    <div class="rail" id="rail" aria-label="카테고리"></div>
     <div class="track" id="track"></div>
-    <div class="meter" aria-hidden="true"><span id="bar"></span></div>
-    <div class="digest" id="digest"></div>
+    <p class="hint">카드를 누르면 자세한 내용과 출처가 열립니다.</p>
   </section>
-
   <section id="view-paper" class="view" role="tabpanel" aria-labelledby="tab-paper" hidden>
     <p class="paper-note">A4 한 장 분량입니다. 브라우저에서 인쇄하면 이 지면만 출력됩니다.</p>
     <div class="paper-wrap"><article class="a4" id="paper"></article></div>
@@ -211,14 +199,11 @@ footer{color:var(--grey);font-size:13px;padding:22px 0 40px;border-top:1px solid
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="d-title" id="sheet">
     <button class="close" id="close" aria-label="닫기">×</button>
     <div id="d-body"></div>
-    <div class="pager">
-      <button id="d-prev">이전 카드</button>
-      <button id="d-next">다음 카드</button>
-    </div>
+    <div class="pager"><button id="d-prev">이전 카드</button><button id="d-next">다음 카드</button></div>
   </div>
 </div>
 
-<!-- ISSUES: newest first. Weekly updates prepend a new object here. -->
+<!-- ISSUES: newest first. Each issue: one card per category, in CATEGORIES order (M&A last). -->
 <script id="issues" type="application/json">
 [
 {
@@ -226,316 +211,194 @@ footer{color:var(--grey);font-size:13px;padding:22px 0 40px;border-top:1px solid
   "no": 1,
   "label": "2026년 11월 3주차",
   "range": "11.16 – 11.22",
-  "published": "2026-11-18",
+  "published": "2026-11-19",
+  "headline": "GTA 6 오늘 출시, 연말 시장이 한 작품에 쏠린다",
+  "top3": [
+    "GTA 6가 오늘(19일) 출시됐습니다. 첫 주에만 약 5,100만 장이 팔릴 것이란 전망입니다.",
+    "국내 3분기 실적은 넥슨·엔씨만 웃었고, 크래프톤 영업이익은 35.5% 줄었습니다.",
+    "지스타가 오늘 개막했지만, 국내 대형사들은 12월 AGF의 서브컬처 신작에 더 힘을 싣습니다."
+  ],
   "cards": [
     {
-      "key": "gta6",
-      "tag": "이번 주 최대 이슈",
-      "title": "GTA 6, 11월 19일 출시",
-      "stat": "13년",
-      "statLabel": "GTA 5 이후 첫 정식 후속작",
-      "summary": "두 차례 연기 끝에 PS5·Xbox로 출시. 연말 시장을 사실상 이 한 작품이 좌우합니다.",
+      "cat": "신작·출시",
+      "lead": true,
+      "title": "GTA 6, 오늘 출시",
+      "stat": "5,100만 장",
+      "statLabel": "첫 주 판매 전망 (Newzoo)",
+      "summary": "13년 만의 후속작. 다른 신작들은 출시일을 피해 갑니다.",
       "detail": {
-        "lede": "락스타게임즈의 GTA 6가 11월 19일(목) PS5와 Xbox Series X|S로 출시됩니다. 2025년 가을에서 2026년 5월, 다시 11월로 두 번 연기된 끝의 출시입니다.",
+        "lede": "락스타게임즈의 GTA 6가 11월 19일 PS5와 Xbox Series X|S로 출시됐습니다. PC판은 아직 발표되지 않았습니다.",
         "points": [
-          "11월 12일부터 디지털 사전 다운로드가 열렸고, 10월 15일 공개된 런치 트레일러에서 출시일을 다시 확정했습니다.",
-          "PC판은 아직 발표되지 않았습니다. Newzoo는 2027년 PC 출시를 전망에 반영했습니다.",
-          "Newzoo는 GTA 6 덕분에 올해 패키지(풀게임) 매출이 17.5% 늘 것으로 봤습니다. 이 작품이 없었다면 콘솔 매출은 제자리였을 것이라는 분석입니다.",
-          "다른 게임사들은 출시일을 GTA 6 앞뒤로 피해 잡는 분위기입니다."
+          "Newzoo는 사전 예약 데이터를 바탕으로 첫 주 매출을 약 45억 달러(약 5,100만 장)로 추정했습니다.",
+          "Newzoo는 GTA 6가 없었다면 올해 콘솔 매출은 제자리였을 것으로 분석했습니다.",
+          "다음 주요 출시: 11.26 아주르 프로밀리아·템빨(넥슨), 12.3 왈츠앤잼(크래프톤), 2027.2.23 페이블."
         ],
+        "so": "대작 출시 직후 2~3주는 신작 출시와 대형 업데이트를 피하는 것이 안전합니다.",
         "sources": [
-          {"t": "PC Gamer – GTA 6 연기 발표", "u": "https://www.pcgamer.com/games/action/grand-theft-auto-6-is-delayed-to-november-these-extra-months-will-allow-us-to-finish-the-game-with-the-level-of-polish-you-have-come-to-expect-and-deserve"},
-          {"t": "Fox10 – 11월 19일 확정, 사전 다운로드", "u": "https://www.fox10tv.com/2026/10/16/gta-6-locks-nov-19-release-date-after-delays/?outputType=amp"},
-          {"t": "GameDev.net – Newzoo 콘솔 전망", "u": "https://gamedev.net/news/newzoo-2026-console-revenue-would-be-flat-year-on-year-without-grand-theft-auto-6-r5375/"}
+          {"t": "GamesBeat – Newzoo 사전 예약 분석", "u": "https://gamesbeat.com/?p=329311"},
+          {"t": "PC Gamer – 출시일 발표", "u": "https://www.pcgamer.com/games/action/grand-theft-auto-6-is-delayed-to-november-these-extra-months-will-allow-us-to-finish-the-game-with-the-level-of-polish-you-have-come-to-expect-and-deserve"},
+          {"t": "GameDev.net – Newzoo 콘솔 전망", "u": "https://gamedev.net/news/newzoo-2026-console-revenue-would-be-flat-year-on-year-without-grand-theft-auto-6-r5375/"},
+          {"t": "게임메카 – 11월 기대작", "u": "https://www.gamemeca.com/view.php?gid=1782697"}
         ]
       }
     },
     {
-      "key": "market",
-      "tag": "시장",
-      "title": "올해 세계 게임 시장, 사상 최대",
-      "stat": "2,139억 달러",
-      "statLabel": "2026년 전망 · 전년 대비 +6.1%",
-      "summary": "모바일이 57%로 최대. 다만 신규 이용자 증가는 둔화돼 기존 이용자 유지가 관건입니다.",
+      "cat": "흥행·순위",
+      "title": "스팀, 사상 첫 연매출 200억 달러 전망",
+      "stat": "200억 달러",
+      "statLabel": "올해 스팀 연매출 전망 (Alinea)",
+      "summary": "PC 게임 시장이 계속 커지고 있습니다.",
       "detail": {
-        "lede": "Newzoo는 2026년 세계 게임 시장을 2,139억 달러로 전망했습니다. 전년보다 6.1% 늘어난 사상 최대 규모입니다.",
-        "table": {
-          "head": ["플랫폼", "매출(억 달러)", "전년 대비", "비고"],
-          "rows": [
-            ["모바일", "1,211", "+6.8%", "전체의 57%"],
-            ["콘솔", "469", "+5.1%", "GTA 6 효과"],
-            ["PC", "459", "+5.3%", "인게임 결제 비중 확대"],
-            ["전체", "2,139", "+6.1%", "중국·미국이 지출의 52%"]
-          ]
-        },
+        "lede": "시장조사업체 Alinea Analytics는 올해 스팀 연매출이 처음으로 200억 달러를 넘을 것으로 내다봤습니다.",
         "points": [
-          "이용자 수는 올해 37억 명(+4.4%)이지만 2029년까지는 연 3.2%로 증가세가 꺾입니다.",
-          "모바일 다운로드는 상반기에 25% 줄고 설치당 비용은 30% 올랐습니다. 새 이용자를 데려오는 비용이 비싸지고 있습니다.",
-          "기존 라이브 서비스 게임 대부분은 상반기 매출이 제자리이거나 줄었습니다."
+          "상반기 스팀 매출은 111억 달러로 반기 기준 역대 최대였습니다.",
+          "9월 매출의 25.6%가 무료 게임에서 나왔고, 배틀그라운드·카운터 스트라이크 2·에이펙스·도타 2 네 작품이 전체의 약 10%를 벌었습니다.",
+          "콘솔에서는 인섬니악의 「울버린」이 190만 장 팔리며 올해 소니 퍼스트파티 최고 판매작이 됐습니다."
         ],
+        "so": "PC(스팀) 비중이 커지는 만큼 PC 동시 출시 여부가 흥행 변수입니다.",
         "sources": [
-          {"t": "GamesBeat – Newzoo 이용자 전망", "u": "https://gamesbeat.com/global-players-could-reach-4-billion-by-2029-newzoo/"},
-          {"t": "PocketGamer.biz – 모바일 다운로드·CPI", "u": "https://www.pocketgamer.biz/no-single-model-for-growth-says-newzoo/"},
-          {"t": "GameDev.net – 라이브 서비스 둔화", "u": "https://gamedev.net/news/5639/"}
+          {"t": "Inven Global – 스팀 상반기 매출", "u": "https://www.invenglobal.com/articles/23714/steam-earns-167-trillion-in-first-half-alone"},
+          {"t": "Mezha – 스팀 9월 매출·연간 전망", "u": "https://mezha.ua/en/news/steam-record-revenue-315792/"},
+          {"t": "TweakTown – 울버린 판매량", "u": "https://www.tweaktown.com/author/Derek-Strickland/index.html"}
         ]
       }
     },
     {
-      "key": "kr-q3",
-      "tag": "국내 실적",
-      "title": "3분기 성적표: 넥슨·엔씨 웃고, 나머지는 주춤",
+      "cat": "국내 게임사",
+      "title": "3분기, 넥슨·엔씨만 웃었다",
       "stat": "-35.5%",
       "statLabel": "크래프톤 3분기 영업이익 증감",
-      "summary": "넥슨은 누적 역대 최대, 엔씨는 흑자 전환. 여러 회사가 환율 탓에 순손실을 봤습니다.",
+      "summary": "여러 회사가 영업이익을 내고도 환율 탓에 순손실을 봤습니다.",
       "detail": {
-        "lede": "국내 주요 게임사의 2026년 3분기(7~9월) 실적이 엇갈렸습니다. 영업이익을 내고도 환차손으로 순손실을 낸 회사가 여럿 나왔습니다.",
+        "lede": "국내 주요 게임사의 3분기(7~9월) 실적이 엇갈렸습니다. 해외에서 통하는 IP를 가진 회사만 성장했습니다.",
         "table": {
-          "head": ["회사", "매출(억 원)", "영업이익(억 원)", "포인트"],
+          "head": ["회사", "매출(억 원)", "영업이익(억 원)"],
           "rows": [
-            ["넥슨", "12,312 (+17%)", "3,718 (+11%)", "메이플스토리·FC 온라인 호조"],
-            ["크래프톤", "9,714 (+11.6%)", "2,250 (-35.5%)", "PUBG PC 매출 감소, 비용 증가"],
-            ["엔씨", "6,865 (+90.7%)", "1,196 (흑자 전환)", "순이익은 환차손으로 -94%"],
-            ["넷마블", "–", "-44.6%", "하반기 신작 내년으로 연기"],
-            ["카카오게임즈", "–", "적자 확대", "4분기 반등 기대"]
+            ["넥슨", "12,312 (+17%)", "3,718 (+11%)"],
+            ["크래프톤", "9,714 (+11.6%)", "2,250 (-35.5%)"],
+            ["엔씨", "6,865 (+90.7%)", "1,196 (흑자 전환)"],
+            ["넷마블", "–", "-44.6%"],
+            ["카카오게임즈", "–", "적자 확대"]
           ]
         },
         "points": [
-          "넥슨은 메이플스토리 IP 매출이 72% 늘었습니다. 중국·대만 클래식 서버 흥행이 컸고, 던전앤파이터는 33% 줄었습니다.",
-          "크래프톤·시프트업·네오위즈는 영업이익을 내고도 분기 순손실을 기록했습니다. 공통 원인은 환율입니다.",
-          "넷마블은 2027년에 신작 13종을 내놓을 계획입니다."
+          "넥슨은 메이플스토리 IP 매출이 72% 늘었습니다. 중국·대만 클래식 서버 흥행 덕분입니다.",
+          "크래프톤·시프트업·네오위즈는 영업이익을 내고도 환차손으로 분기 순손실을 기록했습니다."
         ],
+        "so": "실적은 글로벌 IP와 라이브 서비스를 가졌는지에서 갈렸습니다.",
         "sources": [
-          {"t": "마이데일리바이트 – 넥슨·크래프톤 3분기", "u": "https://www.mydailybyte.com/post/%EB%84%A5%EC%8A%A8-%ED%81%AC%EB%9E%98%ED%94%84%ED%86%A4-3%EB%B6%84%EA%B8%B0-2611"},
-          {"t": "코리안센터 – 엔씨 3분기", "u": "https://www.koreancenter.or.kr/news/articleView.html?idxno=1438028"},
-          {"t": "뉴스토마토 – 넷마블·카카오게임즈", "u": "https://newstomato.com/ReadNews.aspx?no=1319567"},
-          {"t": "게임메카 – 3분기 정리", "u": "https://www.gamemeca.com/view.php?gid=1783487"}
+          {"t": "마이데일리바이트 – 넥슨·크래프톤", "u": "https://www.mydailybyte.com/post/%EB%84%A5%EC%8A%A8-%ED%81%AC%EB%9E%98%ED%94%84%ED%86%A4-3%EB%B6%84%EA%B8%B0-2611"},
+          {"t": "코리안센터 – 엔씨", "u": "https://www.koreancenter.or.kr/news/articleView.html?idxno=1438028"},
+          {"t": "뉴스토마토 – 넷마블·카카오게임즈", "u": "https://newstomato.com/ReadNews.aspx?no=1319567"}
         ]
       }
     },
     {
-      "key": "unity",
-      "tag": "M&A",
-      "title": "EA 사들인 사우디 자본, 이번엔 유니티 노린다",
-      "stat": "250억 달러",
-      "statLabel": "유니티 인수 협상 가치 (보도 기준)",
-      "summary": "EA 비상장화를 마친 PIF·실버레이크 컨소시엄이 게임 엔진사 유니티 인수를 논의 중입니다.",
+      "cat": "플랫폼·기기",
+      "title": "스위치 2, 메모리값에 가격 인상",
+      "stat": "500달러",
+      "statLabel": "미국 스위치 2 새 가격 (+50달러)",
+      "summary": "AI 수요로 메모리 가격이 오르며 기기값이 올랐습니다.",
       "detail": {
-        "lede": "사우디 국부펀드(PIF)와 실버레이크가 포함된 투자자 그룹이 유니티 인수를 논의했다고 로이터가 11월 5일 보도했습니다. 협상 가치는 약 250억 달러입니다.",
+        "lede": "닌텐도는 메모리 비용과 미국 관세 부담으로 미국 스위치 2 가격을 50달러 올렸습니다.",
         "points": [
-          "같은 컨소시엄은 약 550억 달러에 EA를 인수해 8월 4일 상장 폐지를 마쳤습니다. 이후 EA는 바이오웨어 스튜디오를 닫았습니다.",
-          "실버레이크는 이미 유니티 지분 약 8%를 갖고 있습니다.",
-          "확정된 것은 아니며 조건도 바뀔 수 있다고 보도는 전했습니다.",
-          "성사되면 대형 퍼블리셔와 모바일 게임 다수가 쓰는 엔진을 같은 자본이 쥐게 됩니다."
+          "4~9월 스위치 2 판매는 649만 대로 전년보다 37.4% 줄었습니다. 출시 직후였던 작년과 비교한 수치입니다.",
+          "누적 판매는 2,635만 대이고, 같은 기간 영업이익은 49.1% 늘었습니다."
         ],
+        "so": "기기 가격이 오르면 콘솔 보급 속도가 느려질 수 있습니다.",
         "sources": [
-          {"t": "GodisaGeek – 유니티 인수 협상", "u": "https://godisageek.com/2026/11/unity-takeover-talks-silver-lake-pif/"},
-          {"t": "MobileGamer.biz – 로이터 보도 정리", "u": "https://mobilegamer.biz/the-saudi-led-consortium-that-bought-ea-is-in-talks-to-acquire-unity-says-reuters/"}
+          {"t": "Engadget – 가격 인상", "u": "https://engadget.com/2167631/nintendo-raises-switch-2-prices"},
+          {"t": "아나돌루 – 닌텐도 실적", "u": "https://aa.com.tr/en/asia-pacific/nintendo-switch-2-quarterly-sales-fall-41-as-component-costs-weigh/4112282"}
         ]
       }
     },
     {
-      "key": "switch2",
-      "tag": "하드웨어",
-      "title": "메모리값 상승에 스위치 2 가격 인상",
-      "stat": "-37.4%",
-      "statLabel": "스위치 2 상반기 판매 (전년 대비)",
-      "summary": "AI 수요로 메모리 가격이 오르며 미국 판매가 500달러로 인상. 판매는 줄었지만 이익은 늘었습니다.",
+      "cat": "트렌드",
+      "title": "AI 쓰는 개발자 늘고, 반감도 커졌다",
+      "stat": "52%",
+      "statLabel": "'AI가 업계에 부정적' 응답 (작년 30%)",
+      "summary": "개발자 36%가 생성형 AI를 쓰지만, 팬 반발 사례도 이어집니다.",
       "detail": {
-        "lede": "닌텐도는 메모리 비용과 미국 관세 부담으로 미국 스위치 2 가격을 50달러 올려 500달러로 맞췄습니다.",
+        "lede": "GDC 2026 조사에서 업계 종사자 36%가 생성형 AI를 쓴다고 답했습니다. 부정적이라는 응답은 1년 새 30%에서 52%로 늘었습니다.",
         "points": [
-          "4~9월 스위치 2 판매는 649만 대로 전년보다 37.4% 줄었습니다. 출시 직후였던 작년과 비교한 결과라는 점은 감안해야 합니다.",
-          "누적 판매는 2,635만 대이고, 같은 기간 영업이익은 49.1% 늘었습니다.",
-          "연말 주력작은 11월 5일 나온 「젤다의 전설 시간의 오카리나」 리메이크입니다.",
-          "차세대 콘솔은 2028년 출시가 거론됩니다."
+          "스팀에서 AI 사용을 공시한 게임 비중은 2024년 약 12%에서 2026년 초 약 31%로 늘었습니다.",
+          "사이게임즈(우마무스메)와 레벨파이브는 캐릭터·영상에 AI를 썼다가 팬 반발을 샀습니다."
         ],
+        "so": "AI는 개발 효율에 쓰고, 이용자 눈에 보이는 아트·캐릭터에는 신중해야 합니다.",
         "sources": [
-          {"t": "아나돌루 – 닌텐도 실적", "u": "https://aa.com.tr/en/asia-pacific/nintendo-switch-2-quarterly-sales-fall-41-as-component-costs-weigh/4112282"},
-          {"t": "Engadget – 스위치 2 가격 인상", "u": "https://engadget.com/2167631/nintendo-raises-switch-2-prices"},
-          {"t": "Nintendo Everything – 11월 실적 정리", "u": "https://nintendoeverything.com/?p=928544"}
+          {"t": "디지털데일리 – GDC 2026 조사", "u": "https://www.ddaily.co.kr/page/view/2026052221124155350"},
+          {"t": "콘진원 – 글로벌 게임산업 트렌드", "u": "https://www.kocca.kr/global/2026_1+2/sub02_04.html"}
         ]
       }
     },
     {
-      "key": "gstar",
-      "tag": "행사",
-      "title": "지스타 2026, 내일 부산서 개막",
+      "cat": "행사·일정",
+      "title": "지스타 오늘 개막, 무게는 AGF로",
       "stat": "11.19–22",
-      "statLabel": "부산 벡스코",
-      "summary": "국내 대형사 다수 불참. 제1전시장 국내 주요 게임사는 크래프톤·웹젠 두 곳뿐입니다.",
+      "statLabel": "지스타 2026, 부산 벡스코",
+      "summary": "국내 대형사는 12월 AGF에서 서브컬처 신작을 공개합니다.",
       "detail": {
-        "lede": "국제게임전시회 지스타 2026이 11월 19일부터 22일까지 부산 벡스코에서 열립니다. 메인 스폰서는 처음으로 비게임사인 뤼튼의 AI 서비스 ‘크랙’이 맡았습니다.",
+        "lede": "지스타 2026이 부산 벡스코에서 개막했습니다. 제1전시장에 부스를 낸 국내 주요 게임사는 크래프톤과 웹젠뿐입니다.",
         "points": [
-          "크래프톤은 10년 연속 참가해 신작 3종(타래: 언바운드, 에이지 트위스터, 왈츠앤잼)과 배틀그라운드·템빨용사를 선보입니다.",
-          "웹젠은 2027년 출시 예정인 디펜스 신작 체험판을 공개합니다.",
-          "빈자리는 세가·코에이 테크모·넷이즈·CDPR 등 해외 게임사와 인디 114개사가 채웠습니다.",
-          "국내 대형사들은 신작 첫 공개 무대로 게임스컴 등 해외 행사를 택하는 추세입니다."
+          "크래프톤은 신작 3종(타래: 언바운드, 에이지 트위스터, 왈츠앤잼)을 선보입니다.",
+          "AGF 2026(12.4–6, 일산 킨텍스)에는 엔씨(메인 스폰서)·넥슨·스마일게이트가 서브컬처 신작을 냅니다."
         ],
+        "so": "신작 첫 공개 무대가 해외 행사와 장르별 행사로 나뉘고 있습니다.",
         "sources": [
           {"t": "인사이트 – 지스타 배치도", "u": "https://www.insight.co.kr/news/575855"},
-          {"t": "바이라인네트워크 – 출품작", "u": "https://byline.network/2026/11/3-472/"},
-          {"t": "MTN – 메인 스폰서 크랙", "u": "https://news.mtn.co.kr/news-detail/2026081313084077110"},
-          {"t": "아이뉴스24 – 인디 쇼케이스", "u": "https://inews24.com/view/2019941"}
-        ]
-      }
-    },
-    {
-      "key": "agf",
-      "tag": "트렌드",
-      "title": "국내 대형사, 서브컬처에 집중",
-      "stat": "12.4–6",
-      "statLabel": "AGF 2026 · 일산 킨텍스",
-      "summary": "엔씨·넥슨·스마일게이트가 서브컬처 신작을 AGF에서 공개합니다. 엔씨는 메인 스폰서입니다.",
-      "detail": {
-        "lede": "올해는 엔씨·넥슨·스마일게이트 등 대형사가 서브컬처 장르에 힘을 실으면서, 지스타보다 12월 AGF에 무게가 쏠렸습니다.",
-        "table": {
-          "head": ["회사", "AGF 출품작"],
-          "rows": [
-            ["엔씨 (메인 스폰서)", "아스트라에 오라티오"],
-            ["넥슨", "아주르 프로밀리아, 파레이돌리아"],
-            ["스마일게이트", "미래시: 보이지 않는 미래, 카오스 제로 나이트메어"],
-            ["위메이드커넥트", "오즈 외 2종"],
-            ["기타", "넷마블·네오위즈·시프트업 참가"]
-          ]
-        },
-        "points": [
-          "넥슨이 퍼블리싱하는 오픈월드 서브컬처 「아주르 프로밀리아」는 11월 26일 출시됩니다.",
-          "타깃 이용자층과 직접 만날 수 있고 부산 원정 비용이 들지 않는 점이 AGF 쏠림의 이유로 꼽힙니다."
-        ],
-        "sources": [
           {"t": "바이라인네트워크 – 지스타·AGF 출품작", "u": "https://byline.network/2026/11/3-472/"}
         ]
       }
     },
     {
-      "key": "ai",
-      "tag": "AI",
-      "title": "AI 쓰는 개발자 늘었지만, 반감도 커졌다",
-      "stat": "52%",
-      "statLabel": "‘생성형 AI가 업계에 부정적’ 응답 (작년 30%)",
-      "summary": "개발자 36%가 생성형 AI를 쓰지만, 캐릭터·아트에 AI를 썼다가 사과하는 사례가 이어집니다.",
+      "cat": "투자·M&A",
+      "title": "EA 산 사우디 자본, 유니티 인수 논의",
+      "stat": "250억 달러",
+      "statLabel": "유니티 인수 논의 가치 (보도 기준)",
+      "summary": "EA를 비상장화한 컨소시엄이 게임 엔진사까지 노립니다.",
       "detail": {
-        "lede": "GDC 2026 조사에서 게임업계 종사자 36%가 생성형 AI를 업무에 쓴다고 답했습니다. 동시에 업계에 부정적이라는 응답은 1년 새 30%에서 52%로 늘었습니다.",
+        "lede": "사우디 국부펀드(PIF)와 실버레이크가 포함된 투자자 그룹이 유니티 인수를 논의했다고 로이터가 보도했습니다. 확정된 것은 아닙니다.",
         "points": [
-          "스팀에서 AI 사용을 공시한 게임 비중은 2024년 약 12%에서 2026년 초 약 31%로 늘었습니다.",
-          "사이게임즈(우마무스메)는 AI 자회사 설립 발표 후 팬 반발을 샀고, 레벨파이브 사장은 쇼케이스 영상의 AI 사용을 사과했습니다.",
-          "AI를 핵심 콘텐츠로 쓴 한국 게임이 스팀 누적 200만 장을 넘기며 ‘AI 네이티브 게임’ 가능성도 보였습니다.",
-          "개발 효율에는 적극 쓰되, 이용자 눈에 보이는 영역은 신중해야 한다는 교훈이 쌓이고 있습니다."
+          "같은 컨소시엄은 약 550억 달러에 EA를 인수해 8월 상장 폐지를 마쳤고, 이후 EA는 바이오웨어 스튜디오를 닫았습니다.",
+          "성사되면 대형 퍼블리셔와 다수 모바일 게임이 쓰는 엔진을 같은 자본이 갖게 됩니다."
         ],
+        "so": "유니티 엔진을 쓰는 회사라면 라이선스 정책 변화를 지켜봐야 합니다.",
         "sources": [
-          {"t": "디지털데일리 – GDC 2026 조사", "u": "https://www.ddaily.co.kr/page/view/2026052221124155350"},
-          {"t": "콘진원 – 글로벌 게임산업 트렌드 1·2월호", "u": "https://www.kocca.kr/global/2026_1+2/sub02_04.html"},
-          {"t": "콘진원 – 9·10월호", "u": "https://kocca.kr/global/2026_9+10/sub02_02.html"},
-          {"t": "세계일보 – AI 네이티브 게임", "u": "https://www.segye.com/newsView/20260719511327"}
-        ]
-      }
-    },
-    {
-      "key": "calendar",
-      "tag": "신작 캘린더",
-      "title": "다음에 나올 주요 게임",
-      "stat": "2.23",
-      "statLabel": "2027년 상반기 대작 「페이블」 출시일",
-      "summary": "11월 말 넥슨 신작 2종, 12월 크래프톤 왈츠앤잼, 내년 2월 페이블이 이어집니다.",
-      "detail": {
-        "lede": "GTA 6 이후 일정입니다. 날짜는 개발사 사정에 따라 바뀔 수 있습니다.",
-        "table": {
-          "head": ["날짜", "게임", "플랫폼 / 비고"],
-          "rows": [
-            ["11.26", "아주르 프로밀리아", "PC·모바일, 넥슨 퍼블리싱"],
-            ["11.26", "템빨: 오버기어드", "넥슨 신작"],
-            ["12.3", "왈츠앤잼", "크래프톤, 글로벌 출시"],
-            ["2027.2.18", "페르소나 4 리바이벌", "PS5·PC·Xbox"],
-            ["2027.2.23", "페이블", "PC·PS5·Xbox"],
-            ["2027.5.20", "갓 오브 워: 라우피", "2월에서 연기"],
-            ["2027", "위처 4 · 포켓몬 윈즈 · 킹덤 하츠 4", "날짜 미정"]
-          ]
-        },
-        "points": [
-          "이미 출시된 11월 작품: 아키에이지 크로니클(11.4), 젤다 시간의 오카리나 리메이크·WoW 포에버(11.5), 풋볼 매니저 27(11.11)."
-        ],
-        "sources": [
-          {"t": "게임메카 – 11월 기대작", "u": "https://www.gamemeca.com/view.php?gid=1782697"},
-          {"t": "지디넷코리아 – 넥슨 4분기 신작", "u": "https://zdnet.co.kr/view/?no=20261113110551"},
-          {"t": "PC Gamer – 2027 신작", "u": "https://www.pcgamer.com/games/new-pc-games-2027/"},
-          {"t": "Sportsdigest – 2027 출시작", "u": "https://sportsdigest.in/upcoming-video-games-2027/228795/amp/"}
+          {"t": "GodisaGeek – 유니티 인수 논의", "u": "https://godisageek.com/2026/11/unity-takeover-talks-silver-lake-pif/"},
+          {"t": "MobileGamer.biz – 로이터 보도 정리", "u": "https://mobilegamer.biz/the-saudi-led-consortium-that-bought-ea-is-in-talks-to-acquire-unity-says-reuters/"}
         ]
       }
     }
   ],
-  "digest": {
-    "watch": [
-      "GTA 6 출시 첫 주 판매·서버 상황",
-      "지스타 현장 반응과 관람객 수",
-      "유니티 인수 협상 진행 여부"
-    ],
-    "calendar": [
-      ["11.19", "GTA 6 출시 · 지스타 개막"],
-      ["11.26", "아주르 프로밀리아 · 템빨 출시"],
-      ["12.3", "왈츠앤잼 글로벌 출시"],
-      ["12.4", "AGF 2026 개막"]
-    ],
-    "implication": [
-      "출시·행사 일정은 GTA 6 등 대작을 피해 잡아야 합니다.",
-      "실적을 지킨 곳은 글로벌 IP와 라이브 서비스를 가진 회사였습니다.",
-      "AI는 개발 효율에 쓰고, 이용자 눈에 보이는 영역은 신중하게."
-    ]
-  },
-  "paper": {
-    "kicker": "이번 주 톱",
-    "headline": "GTA 6 출시·지스타 개막, 같은 날 열리는 연말 승부",
-    "deck": "세계 시장은 사상 최대 2,139억 달러 전망 속 국내 게임사 실적은 엇갈려",
-    "articles": [
-      {"h": "13년 만의 GTA, 시장을 흔든다", "p": [
-        "락스타게임즈의 GTA 6가 19일 PS5와 Xbox로 출시된다. 두 차례 연기 끝의 출시로, 12일부터 디지털 사전 다운로드가 열렸다. PC판은 아직 발표되지 않았다.",
-        "시장조사업체 Newzoo는 올해 세계 게임 시장을 2,139억 달러(전년 대비 6.1% 증가)로 내다보면서, GTA 6가 없었다면 콘솔 매출은 제자리였을 것이라고 분석했다. 신규 이용자 증가는 둔화하고 있어 기존 이용자 유지가 성장의 열쇠로 꼽힌다."
-      ]},
-      {"h": "국내 3분기, 넥슨·엔씨만 웃었다", "p": [
-        "넥슨은 3분기 매출 1조 2,312억 원으로 1~3분기 누적 역대 최대를 기록했다. 메이플스토리 클래식 서버의 중국·대만 흥행이 컸다. 엔씨는 매출이 90.7% 늘며 흑자로 돌아섰다.",
-        "반면 크래프톤은 영업이익이 35.5% 줄었고, 넷마블은 44.6% 감소했다. 크래프톤·시프트업·네오위즈는 영업이익을 내고도 환차손으로 분기 순손실을 냈다."
-      ]},
-      {"h": "지스타는 ‘조용’, 서브컬처는 AGF로", "p": [
-        "지스타 2026이 19일 부산 벡스코에서 개막하지만, 제1전시장의 국내 주요 게임사는 크래프톤과 웹젠뿐이다. 엔씨·넥슨·스마일게이트는 12월 4일 개막하는 AGF에 서브컬처 신작을 내놓는다."
-      ]},
-      {"h": "자본 재편과 AI 논쟁", "p": [
-        "EA를 약 550억 달러에 인수한 사우디 PIF·실버레이크 컨소시엄이 게임 엔진사 유니티 인수를 약 250억 달러 규모로 논의 중이라는 보도가 나왔다. 개발 현장에서는 생성형 AI를 쓰는 비율이 36%에 이르지만, 업계에 부정적이라는 응답도 52%로 늘었다."
-      ]}
-    ],
-    "numbers": [
-      ["2,139억 달러", "2026 세계 게임 시장 전망"],
-      ["1조 2,312억 원", "넥슨 3분기 매출"],
-      ["-37.4%", "스위치 2 상반기 판매 증감"],
-      ["52%", "‘AI가 업계에 부정적’ 개발자 응답"]
-    ],
-    "briefs": [
-      "닌텐도, 메모리값 상승에 미국 스위치 2 가격 500달러로 인상",
-      "넷마블, 하반기 신작 모두 내년으로… 2027년 13종 출시",
-      "EA, 비상장화 이후 바이오웨어 스튜디오 폐쇄"
-    ],
-    "calendar": [
-      "11.19 GTA 6 · 지스타 개막",
-      "11.26 아주르 프로밀리아 · 템빨",
-      "12.3 왈츠앤잼",
-      "12.4 AGF 2026",
-      "2027.2.23 페이블"
-    ],
-    "note": "출시·행사 일정은 대작을 피해 잡고, 글로벌 IP와 라이브 서비스 경쟁력을 점검할 시점입니다."
-  }
+  "calendar": [
+    ["11.19", "GTA 6 출시, 지스타 개막"],
+    ["11.26", "아주르 프로밀리아·템빨 출시"],
+    ["12.3", "왈츠앤잼 글로벌 출시"],
+    ["12.4", "AGF 2026 개막"],
+    ["2.23", "페이블 출시 (2027)"]
+  ],
+  "note": "출시·행사 일정은 대작을 피해 잡고, 글로벌 IP와 PC 동시 출시 전략을 점검할 시점입니다."
 }
 ]
 </script>
 
 <script>
 (function(){
+  var CATEGORIES = ['신작·출시','흥행·순위','국내 게임사','플랫폼·기기','트렌드','행사·일정','투자·M&A'];
   var ISSUES = [];
   try { ISSUES = JSON.parse(document.getElementById('issues').textContent); } catch(e) { ISSUES = []; }
   var cur = 0, open = -1, lastFocus = null;
   var $ = function(id){ return document.getElementById(id); };
   function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function safeUrl(u){ return /^https?:\/\//.test(u||'') ? u : '#'; }
-  // card colours: first card is the week's lead (coin); the rest rotate
-  var PLATES = [['var(--volt)','#fff',0],['var(--ember)','#fff',0],['var(--mint)','#06261D',1],['var(--night-2)','#F3F4FA',0],['var(--grape)','#fff',0]];
   function figSize(t){ var n = String(t||'').length; return n >= 8 ? ' l' : (n >= 7 ? ' m' : ''); }
-  function plate(i){ return i === 0 ? ['var(--coin)','#1B1600',1] : PLATES[(i-1) % PLATES.length]; }
+  function cards(){
+    var is = ISSUES[cur]; if(!is) return [];
+    return is.cards.slice().sort(function(a,b){
+      var x = CATEGORIES.indexOf(a.cat), y = CATEGORIES.indexOf(b.cat);
+      return (x < 0 ? 99 : x) - (y < 0 ? 99 : y);
+    });
+  }
 
   var sel = $('issue-select');
   ISSUES.forEach(function(is, i){
@@ -543,81 +406,82 @@ footer{color:var(--grey);font-size:13px;padding:22px 0 40px;border-top:1px solid
     o.value = i; o.textContent = '제' + is.no + '호 (' + is.label + ')' + (i === 0 ? ' 최신' : '');
     sel.appendChild(o);
   });
-  sel.addEventListener('change', function(){ cur = +sel.value; render(true); });
-  function issue(){ return ISSUES[cur]; }
+  sel.addEventListener('change', function(){ cur = +sel.value; render(); });
 
-  function render(animate){
-    var is = issue(); if(!is) return;
+  function render(){
+    var is = ISSUES[cur]; if(!is) return;
+    var cs = cards();
     $('h-week').textContent = '제' + is.no + '호 ' + is.label;
-    $('h-range').textContent = is.range + ' 발행 ' + is.published.replace(/-/g,'.');
-    $('h-title').textContent = is.paper.headline;
-    $('h-deck').textContent = is.paper.deck;
-    $('strip-title').textContent = '이번 주 카드뉴스 ' + is.cards.length + '장';
+    $('h-range').textContent = is.range + ', ' + is.published.replace(/-/g,'.') + ' 발행';
+    $('h-title').textContent = is.headline;
+    $('h-top3').innerHTML = (is.top3||[]).map(function(t){ return '<li>' + esc(t) + '</li>'; }).join('');
+    var present = cs.map(function(c){ return c.cat; });
+    $('rail').innerHTML = CATEGORIES.map(function(cat){
+      var k = present.indexOf(cat);
+      return '<button data-k="' + k + '"' + (k < 0 ? ' disabled title="이번 주 소식 없음"' : '') + '>' + esc(cat) + '</button>';
+    }).join('') + '<span class="ctrl"><button id="prev" aria-label="이전 카드">‹</button><button id="next" aria-label="다음 카드">›</button></span>';
     var track = $('track');
-    track.innerHTML = is.cards.map(function(c, i){
-      var p = plate(i);
-      return '<button class="card' + (i === 0 ? ' lead' : '') + '" style="animation-delay:' + (i*50) + 'ms" data-i="' + i + '" aria-label="' + esc(c.title) + ', 자세히 보기">' +
-        '<span class="tag">' + esc(c.tag) + '</span>' +
-        '<span class="open" aria-hidden="true">+</span>' +
-        '<span class="fig' + figSize(c.stat) + '">' + esc(c.stat) + '</span>' +
-        '<span class="figlab">' + esc(c.statLabel) + '</span>' +
-        '<h3>' + esc(c.title) + '</h3>' +
-        '<p>' + esc(c.summary) + '</p>' +
-      '</button>';
+    track.innerHTML = cs.map(function(c, i){
+      return '<button class="card' + (c.lead ? ' lead' : '') + '" style="animation-delay:' + (i*50) + 'ms" data-i="' + i + '" aria-label="' + esc(c.cat + ', ' + c.title) + ', 자세히 보기">' +
+        '<span class="cat">' + esc(c.cat) + '</span><span class="open" aria-hidden="true">+</span>' +
+        '<span class="fig' + figSize(c.stat) + '">' + esc(c.stat) + '</span><span class="figlab">' + esc(c.statLabel) + '</span>' +
+        '<h3>' + esc(c.title) + '</h3><p>' + esc(c.summary) + '</p></button>';
     }).join('');
-    track.classList.remove('dealt'); void track.offsetWidth; if(animate !== false) track.classList.add('dealt');
-    track.scrollLeft = 0; updateCount();
-    var d = is.digest || {};
-    $('digest').innerHTML =
-      '<div><h4>이번 주 지켜볼 것</h4><ul class="watch">' + (d.watch||[]).map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>' +
-      '<div><h4>주요 일정</h4><ul class="when">' + (d.calendar||[]).map(function(x){ return '<li><time>' + esc(x[0]) + '</time><span>' + esc(x[1]) + '</span></li>'; }).join('') + '</ul></div>' +
-      '<div><h4>시사점</h4><ul class="so">' + (d.implication||[]).map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>';
-    renderPaper(is);
-  }
-
-  function renderPaper(is){
-    var p = is.paper;
-    $('paper').innerHTML =
-      '<div class="np-mast"><div><i class="by" role="img" aria-label="Risingwings"></i><div class="t">주간 게임 브리핑</div></div><div class="m"><strong>제' + is.no + '호, ' + esc(is.label) + '</strong>' + esc(is.range) + ', ' + esc(is.published.replace(/-/g,'.')) + ' 발행</div></div>' +
-      '<div class="np-head"><span class="kicker">' + esc(p.kicker) + '</span><h2>' + esc(p.headline) + '</h2><p class="deck">' + esc(p.deck) + '</p></div>' +
-      '<div class="np-body"><div class="np-main">' +
-        p.articles.map(function(a){ return '<h3>' + esc(a.h) + '</h3>' + a.p.map(function(t){ return '<p>' + esc(t) + '</p>'; }).join(''); }).join('') +
-      '</div><aside class="np-side">' +
-        '<div><h4>숫자로 보는 이번 주</h4><div class="nums">' + p.numbers.map(function(n){ return '<div><b>' + esc(n[0]) + '</b><span>' + esc(n[1]) + '</span></div>'; }).join('') + '</div></div>' +
-        '<div><h4>단신</h4><ul>' + p.briefs.map(function(b){ return '<li>' + esc(b) + '</li>'; }).join('') + '</ul></div>' +
-        '<div><h4>일정</h4><ul>' + p.calendar.map(function(b){ return '<li>' + esc(b) + '</li>'; }).join('') + '</ul></div>' +
-        '<div><h4>시사점</h4><p class="note">' + esc(p.note) + '</p></div>' +
-      '</aside></div>' +
-      '<div class="np-foot">출처: Newzoo, 각 사 실적 발표와 국내외 보도. 기사별 출처는 카드뉴스의 각 카드에 있습니다.</div>';
+    track.classList.remove('dealt'); void track.offsetWidth; track.classList.add('dealt');
+    track.scrollLeft = 0; mark();
+    $('prev').onclick = function(){ track.scrollBy({left:-cardW(), behavior:'smooth'}); };
+    $('next').onclick = function(){ track.scrollBy({left:cardW(), behavior:'smooth'}); };
+    renderPaper(is, cs);
   }
 
   var track = $('track');
-  function cardW(){ var c = track.querySelector('.card'); return c ? c.getBoundingClientRect().width + 14 : 300; }
-  function idx(){ return Math.min(issue().cards.length - 1, Math.round(track.scrollLeft / cardW())); }
-  function updateCount(){ var i = idx(), n = issue().cards.length; $('count').textContent = (i+1) + ' / ' + n; $('bar').style.width = ((i+1)/n*100) + '%'; }
-  track.addEventListener('scroll', function(){ requestAnimationFrame(updateCount); }, {passive:true});
-  $('prev').addEventListener('click', function(){ track.scrollBy({left:-cardW(), behavior:'smooth'}); });
-  $('next').addEventListener('click', function(){ track.scrollBy({left:cardW(), behavior:'smooth'}); });
+  function cardW(){ var c = track.querySelector('.card'); return c ? c.getBoundingClientRect().width + 12 : 290; }
+  function idx(){ return Math.min(cards().length - 1, Math.round(track.scrollLeft / cardW())); }
+  function mark(){
+    var i = idx();
+    Array.prototype.forEach.call($('rail').querySelectorAll('button[data-k]'), function(b){ b.classList.toggle('on', +b.dataset.k === i); });
+  }
+  track.addEventListener('scroll', function(){ requestAnimationFrame(mark); }, {passive:true});
+  $('rail').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-k]'); if(!b || b.disabled) return;
+    var k = +b.dataset.k, el = track.children[k];
+    if(el) track.scrollTo({left: el.offsetLeft - track.offsetLeft, behavior:'smooth'});
+  });
   track.addEventListener('click', function(e){ var b = e.target.closest('.card'); if(b) openDetail(+b.dataset.i); });
 
+  function renderPaper(is, cs){
+    var nums = cs.filter(function(c){ return /\d/.test(c.stat) && !/^\d{1,2}\.\d/.test(c.stat); }).slice(0,4);
+    $('paper').innerHTML =
+      '<div class="np-mast"><div><i class="by" role="img" aria-label="Risingwings"></i><div class="t">주간 게임 브리핑</div></div><div class="m"><strong>제' + is.no + '호, ' + esc(is.label) + '</strong>' + esc(is.range) + ', ' + esc(is.published.replace(/-/g,'.')) + ' 발행</div></div>' +
+      '<div class="np-head"><h2>' + esc(is.headline) + '</h2><div><div class="lbl">한눈에 보는 이번 주</div><ul>' + (is.top3||[]).map(function(t){ return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></div></div>' +
+      '<div class="np-body"><div class="np-cats">' + cs.map(function(c){
+        var d = c.detail || {};
+        return '<article><div class="c">' + esc(c.cat) + '</div><h3>' + esc(c.title) + '</h3><p>' + esc(d.lede) + '</p>' + (d.so ? '<p class="s"><b>의미</b> ' + esc(d.so) + '</p>' : '') + '</article>';
+      }).join('') + '</div><aside class="np-side">' +
+        '<div><h4>숫자로 보는 이번 주</h4><div class="nums">' + nums.map(function(c){ return '<div><b>' + esc(c.stat) + '</b><span>' + esc(c.statLabel) + '</span></div>'; }).join('') + '</div></div>' +
+        '<div><h4>다가오는 일정</h4><ul>' + (is.calendar||[]).map(function(x){ return '<li><b>' + esc(x[0]) + '</b><span>' + esc(x[1]) + '</span></li>'; }).join('') + '</ul></div>' +
+        (is.note ? '<div><h4>시사점</h4><p class="note">' + esc(is.note) + '</p></div>' : '') +
+      '</aside></div>' +
+      '<div class="np-foot">출처: Newzoo, Alinea Analytics, 각 사 실적 발표와 국내외 보도. 기사별 출처는 카드뉴스의 각 카드에 있습니다.</div>';
+  }
+
   function openDetail(i){
-    var cards = issue().cards; if(i < 0 || i >= cards.length) return;
+    var cs = cards(); if(i < 0 || i >= cs.length) return;
     if(open < 0) lastFocus = document.activeElement;
     open = i;
-    var c = cards[i], d = c.detail || {}, p = plate(i);
+    var c = cs[i], d = c.detail || {};
     var tbl = d.table ? '<div class="tbl"><table><thead><tr>' + d.table.head.map(function(h){ return '<th>' + esc(h) + '</th>'; }).join('') + '</tr></thead><tbody>' +
       d.table.rows.map(function(r){ return '<tr>' + r.map(function(x){ return '<td>' + esc(x) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>' : '';
     $('d-body').innerHTML =
-      '<div class="sheet-hero">' +
-        '<span class="tag">' + esc(c.tag) + ', ' + (i+1) + '번째 카드</span>' +
+      '<div class="sheet-hero"><span class="cat">' + esc(c.cat) + '</span>' +
         '<div class="fig">' + esc(c.stat) + '</div><div class="figlab">' + esc(c.statLabel) + '</div>' +
-        '<h2 id="d-title">' + esc(c.title) + '</h2>' +
-      '</div><div class="sheet-body">' +
-        '<p class="lede">' + esc(d.lede) + '</p>' + tbl +
+        '<h2 id="d-title">' + esc(c.title) + '</h2></div>' +
+      '<div class="sheet-body"><p class="lede">' + esc(d.lede) + '</p>' +
+        (d.so ? '<p class="so"><b>우리에게 의미</b>' + esc(d.so) + '</p>' : '') + tbl +
         (d.points && d.points.length ? '<ul class="pts">' + d.points.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') +
         (d.sources && d.sources.length ? '<div class="src">출처<ul>' + d.sources.map(function(s){ return '<li><a href="' + esc(safeUrl(s.u)) + '" target="_blank" rel="noopener">' + esc(s.t) + '</a></li>'; }).join('') + '</ul></div>' : '') +
       '</div>';
-    $('d-prev').disabled = i === 0; $('d-next').disabled = i === cards.length - 1;
+    $('d-prev').disabled = i === 0; $('d-next').disabled = i === cs.length - 1;
     $('overlay').hidden = false; document.body.style.overflow = 'hidden'; $('overlay').scrollTop = 0; $('close').focus();
   }
   function closeDetail(){ $('overlay').hidden = true; document.body.style.overflow = ''; open = -1; if(lastFocus && lastFocus.focus) lastFocus.focus(); }
@@ -628,7 +492,7 @@ footer{color:var(--grey);font-size:13px;padding:22px 0 40px;border-top:1px solid
   document.addEventListener('keydown', function(e){
     if(open < 0) return;
     if(e.key === 'Escape') closeDetail();
-    else if(e.key === 'ArrowRight' && open < issue().cards.length - 1) openDetail(open + 1);
+    else if(e.key === 'ArrowRight' && open < cards().length - 1) openDetail(open + 1);
     else if(e.key === 'ArrowLeft' && open > 0) openDetail(open - 1);
     else if(e.key === 'Tab'){
       var f = $('sheet').querySelectorAll('button:not([disabled]), a[href]'); if(!f.length) return;
@@ -648,7 +512,7 @@ footer{color:var(--grey);font-size:13px;padding:22px 0 40px;border-top:1px solid
   $('tab-paper').addEventListener('click', function(){ location.hash = 'paper'; show('paper'); });
   window.addEventListener('hashchange', function(){ show(location.hash === '#paper' ? 'paper' : 'cards'); });
 
-  render(true);
+  render();
   show(location.hash === '#paper' ? 'paper' : 'cards');
 })();
 </script>
